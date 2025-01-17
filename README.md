@@ -1,4 +1,4 @@
-# Scheduler Mod
+# Queue Mod
 A FabricMC library mod, that allows you to schedule tasks.
 
 ## Example Usage
