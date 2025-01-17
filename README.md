@@ -1,5 +1,5 @@
 # Queue Mod
-A FabricMC library mod, that allows you to schedule tasks.
+A FabricMC library mod, that allows you to queue tasks and split them into steps that run over multiple of ticks.
 
 ## Example Usage
 
