@@ -81,59 +81,59 @@ public class QueuedStructureTemplate {
         Iterator<StructureTemplate.StructureBlockInfo> blockInfoIter = processedBlocks.iterator();
 
         return Optional.of(new ActionQueue().thenRunSteps(() -> {
-            if (!blockInfoIter.hasNext())
-                return true;
+                    if (!blockInfoIter.hasNext())
+                        return true;
 
-            QueueStructureBlockInfo blockInfo = (QueueStructureBlockInfo) blockInfoIter.next();
-            BlockPos blockPos = blockInfo.queue$pos();
+                    StructureTemplate.StructureBlockInfo blockInfo = blockInfoIter.next();
+                    BlockPos blockPos = blockInfo.pos;
 
-            if (blockBox != null && !blockBox.contains(blockPos))
-                return false;
+                    if (blockBox != null && !blockBox.contains(blockPos))
+                        return false;
 
-            FluidState fluidState = placementData.shouldPlaceFluids() ? world.getFluidState(blockPos) : null;
-            BlockState blockState = blockInfo.queue$state().mirror(placementData.getMirror()).rotate(placementData.getRotation());
+                    FluidState fluidState = placementData.shouldPlaceFluids() ? world.getFluidState(blockPos) : null;
+                    BlockState blockState = blockInfo.state.mirror(placementData.getMirror()).rotate(placementData.getRotation());
 
-            if (blockInfo.queue$nbt() != null)
-                Clearable.clear(world.getBlockEntity(blockPos));
+                    if (blockInfo.nbt != null)
+                        Clearable.clear(world.getBlockEntity(blockPos));
 
-            // !
-            world.setBlockState(blockPos, blockState, flags);
+                    // !
+                    world.setBlockState(blockPos, blockState, flags);
 
-            ctx.x1 = Math.min(ctx.x1, blockPos.getX());
-            ctx.y1 = Math.min(ctx.y1, blockPos.getY());
-            ctx.z1 = Math.min(ctx.z1, blockPos.getZ());
+                    ctx.x1 = Math.min(ctx.x1, blockPos.getX());
+                    ctx.y1 = Math.min(ctx.y1, blockPos.getY());
+                    ctx.z1 = Math.min(ctx.z1, blockPos.getZ());
 
-            ctx.x2 = Math.max(ctx.x2, blockPos.getX());
-            ctx.y2 = Math.max(ctx.y2, blockPos.getY());
-            ctx.z2 = Math.max(ctx.z2, blockPos.getZ());
+                    ctx.x2 = Math.max(ctx.x2, blockPos.getX());
+                    ctx.y2 = Math.max(ctx.y2, blockPos.getY());
+                    ctx.z2 = Math.max(ctx.z2, blockPos.getZ());
 
-            nbtList.add(Pair.of(blockPos, blockInfo.queue$nbt()));
-            BlockEntity blockEntity = world.getBlockEntity(blockPos);
+                    nbtList.add(Pair.of(blockPos, blockInfo.nbt));
+                    BlockEntity blockEntity = world.getBlockEntity(blockPos);
 
-            // !
-            if (blockInfo.queue$nbt() != null && blockEntity != null)
-                this.readNbt(blockEntity, blockInfo.queue$nbt(), random);
+                    // !
+                    if (blockInfo.nbt != null && blockEntity != null)
+                        this.readNbt(blockEntity, blockInfo.nbt, random);
 
-            if (fluidState == null)
-                return false;
+                    if (fluidState == null)
+                        return false;
 
-            if (blockState.getFluidState().isStill()) {
-                stillFluid.add(blockPos);
-                return false;
-            }
+                    if (blockState.getFluidState().isStill()) {
+                        stillFluid.add(blockPos);
+                        return false;
+                    }
 
-            if (!(blockState.getBlock() instanceof FluidFillable fillable))
-                return false;
+                    if (!(blockState.getBlock() instanceof FluidFillable fillable))
+                        return false;
 
-            // !
-            fillable.tryFillWithFluid(world, blockPos, blockState, fluidState);
+                    // !
+                    fillable.tryFillWithFluid(world, blockPos, blockState, fluidState);
 
-            if (fluidState.isStill())
-                return false;
+                    if (fluidState.isStill())
+                        return false;
 
-            flowingFluid.add(blockPos);
-            return false;
-        }, TimeUnit.TICKS, 1, 20)
+                    flowingFluid.add(blockPos);
+                    return false;
+                }, TimeUnit.TICKS, 1, 20)
                 .thenRun(() -> {
                     // !
                     this.fillWithFluid(world, flowingFluid, stillFluid);
