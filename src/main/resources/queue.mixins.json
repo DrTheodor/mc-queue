@@ -4,8 +4,7 @@
   "package": "dev.drtheo.queue.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "StructureTemplateAccessor",
-    "StructureTemplateMixin"
+    "StructureTemplateAccessor"
   ],
   "client": [
   ],

@@ -84,16 +84,16 @@ public class QueuedStructureTemplate {
             if (!blockInfoIter.hasNext())
                 return true;
 
-            QueueStructureBlockInfo blockInfo = (QueueStructureBlockInfo) blockInfoIter.next();
-            BlockPos blockPos = blockInfo.queue$pos();
+            StructureTemplate.StructureBlockInfo blockInfo = blockInfoIter.next();
+            BlockPos blockPos = blockInfo.pos();
 
             if (blockBox != null && !blockBox.contains(blockPos))
                 return false;
 
             FluidState fluidState = placementData.shouldPlaceFluids() ? world.getFluidState(blockPos) : null;
-            BlockState blockState = blockInfo.queue$state().mirror(placementData.getMirror()).rotate(placementData.getRotation());
+            BlockState blockState = blockInfo.state().mirror(placementData.getMirror()).rotate(placementData.getRotation());
 
-            if (blockInfo.queue$nbt() != null)
+            if (blockInfo.nbt() != null)
                 Clearable.clear(world.getBlockEntity(blockPos));
 
             // !
@@ -107,12 +107,12 @@ public class QueuedStructureTemplate {
             ctx.y2 = Math.max(ctx.y2, blockPos.getY());
             ctx.z2 = Math.max(ctx.z2, blockPos.getZ());
 
-            nbtList.add(Pair.of(blockPos, blockInfo.queue$nbt()));
+            nbtList.add(Pair.of(blockPos, blockInfo.nbt()));
             BlockEntity blockEntity = world.getBlockEntity(blockPos);
 
             // !
-            if (blockInfo.queue$nbt() != null && blockEntity != null)
-                this.readNbt(blockEntity, blockInfo.queue$nbt(), random);
+            if (blockInfo.nbt() != null && blockEntity != null)
+                this.readNbt(blockEntity, blockInfo.nbt(), random);
 
             if (fluidState == null)
                 return false;
@@ -248,7 +248,7 @@ public class QueuedStructureTemplate {
 
                 if (initializeMobs && entity instanceof MobEntity mob)
                     mob.initialize(world, world.getLocalDifficulty(
-                            new BlockPos(vec3d2.x, vec3d2.y, vec3d2.z)
+                            BlockPos.ofFloored(vec3d2)
                     ), SpawnReason.STRUCTURE, null, nbtCompound);
 
                 world.spawnEntityAndPassengers(entity);
