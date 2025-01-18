@@ -18,8 +18,8 @@ maven {
 
 Add the dependency:
 ```groovy
-include(modImplementation("com.github.DrTheodor:mc-queue:1.0.0"))
-include(modImplementation("com.github.DrTheodor:mc-scheduler:1.0.1"))
+include(modImplementation("com.github.DrTheodor:mc-queue:v1.0.0"))
+include(modImplementation("com.github.DrTheodor:mc-scheduler:v1.0.1"))
 ```
 
 - `ActionQueue` - allows to queue sync and async tasks. Example usage:
