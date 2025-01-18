@@ -65,25 +65,23 @@ public class ActionQueue implements Finishable {
     }
 
     public ActionQueue thenRunSteps(Supplier<Boolean> step, TimeUnit unit, int period, int maxTime) {
-        return this.firstRun(f -> {
-            Scheduler.get().runTaskTimer(t -> {
-                boolean shouldContinue = true;
-                long start = System.currentTimeMillis();
+        return this.thenRun(f -> Scheduler.get().runTaskTimer(t -> {
+            boolean shouldContinue = true;
+            long start = System.currentTimeMillis();
 
-                while (shouldContinue) {
-                    shouldContinue = System.currentTimeMillis() - start < maxTime;
+            while (shouldContinue) {
+                shouldContinue = System.currentTimeMillis() - start < maxTime;
 
-                    if (step.get()) {
-                        t.cancel();
+                if (step.get()) {
+                    t.cancel();
 
-                        if (f != null)
-                            f.finish();
+                    if (f != null)
+                        f.finish();
 
-                        return;
-                    }
+                    return;
                 }
-            }, unit, period);
-        });
+            }
+        }, unit, period));
     }
 
     public ActionQueue thenRunSteps(Supplier<Boolean> step, TimeUnit unit, int period) {
