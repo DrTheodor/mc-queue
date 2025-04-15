@@ -12,11 +12,7 @@ base {
 
 repositories {
     maven {
-        url "https://jitpack.io"
-
-        metadataSources {
-            artifact() // Look directly for artifact
-        }
+        url "https://theo.is-a.dev/maven-repo/"
     }
 }
 
@@ -26,7 +22,7 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    modImplementation "com.github.DrTheodor:mc-scheduler:${project.scheduler_version}"
+    modImplementation "dev.drtheo:scheduler:${project.scheduler_version}"
 }
 
 processResources {
