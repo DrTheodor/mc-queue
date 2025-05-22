@@ -3,6 +3,7 @@ package dev.drtheo.queue.api.util.block;
 import dev.drtheo.queue.api.ActionQueue;
 import dev.drtheo.queue.api.util.Value;
 import dev.drtheo.scheduler.api.TimeUnit;
+import dev.drtheo.scheduler.api.common.TaskStage;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -45,7 +46,7 @@ public class ChunkEraser {
 
                     x.value++;
                     return x.value >= maxX;
-                    }, unit, period, maxTime);
+                    }, TaskStage.startWorldTick(world), unit, period, maxTime);
 
         return queue.schedulePlace(result, world, unit, period, maxTime, flags);
     }

@@ -6,8 +6,9 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import dev.drtheo.scheduler.api.Scheduler;
+import dev.drtheo.scheduler.api.common.Scheduler;
 import dev.drtheo.scheduler.api.TimeUnit;
+import dev.drtheo.scheduler.api.common.TaskStage;
 import org.jetbrains.annotations.Nullable;
 
 public class ActionQueue implements Finishable {
@@ -64,7 +65,7 @@ public class ActionQueue implements Finishable {
         });
     }
 
-    public ActionQueue thenRunSteps(Supplier<Boolean> step, TimeUnit unit, int period, int maxTime) {
+    public ActionQueue thenRunSteps(Supplier<Boolean> step, TaskStage stage, TimeUnit unit, int period, int maxTime) {
         return this.thenRun(f -> Scheduler.get().runTaskTimer(t -> {
             boolean shouldContinue = true;
             long start = System.currentTimeMillis();
@@ -81,11 +82,11 @@ public class ActionQueue implements Finishable {
                     return;
                 }
             }
-        }, unit, period));
+        }, stage, unit, period));
     }
 
-    public ActionQueue thenRunSteps(Supplier<Boolean> step, TimeUnit unit, int period) {
-        return this.thenRunSteps(step, unit, period, 2);
+    public ActionQueue thenRunSteps(Supplier<Boolean> step, TaskStage stage, TimeUnit unit, int period) {
+        return this.thenRunSteps(step, stage, unit, period, 2);
     }
 
     public ActionQueue execute() {

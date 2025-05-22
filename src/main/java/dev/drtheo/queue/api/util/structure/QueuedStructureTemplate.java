@@ -9,6 +9,7 @@ import com.mojang.datafixers.util.Pair;
 import dev.drtheo.queue.api.ActionQueue;
 import dev.drtheo.queue.mixin.StructureTemplateAccessor;
 import dev.drtheo.scheduler.api.TimeUnit;
+import dev.drtheo.scheduler.api.common.TaskStage;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -133,7 +134,7 @@ public class QueuedStructureTemplate {
 
             flowingFluid.add(blockPos);
             return false;
-        }, TimeUnit.TICKS, 1, 20)
+        }, TaskStage.startWorldTick(world.toServerWorld()), TimeUnit.TICKS, 1, 20)
                 .thenRun(() -> {
                     // !
                     this.fillWithFluid(world, flowingFluid, stillFluid);

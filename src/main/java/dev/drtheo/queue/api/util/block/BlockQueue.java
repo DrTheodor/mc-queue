@@ -6,6 +6,7 @@ import java.util.Deque;
 import dev.drtheo.queue.api.ActionQueue;
 import dev.drtheo.scheduler.api.TimeUnit;
 
+import dev.drtheo.scheduler.api.common.TaskStage;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -30,7 +31,7 @@ public abstract class BlockQueue {
 
             world.setBlockState(block.pos(), block.state(), blockFlags);
             return false;
-        }, unit, period, maxTime);
+        }, TaskStage.startWorldTick(world), unit, period, maxTime);
     }
 
     protected abstract BlockData pollBlock();
